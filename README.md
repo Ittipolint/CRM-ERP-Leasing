@@ -14,12 +14,13 @@
 - [Software Requirements Specification (SRS)](docs/SRS_CRM-ERP-Leasing.md)
 - [เอกสารตัวอย่าง (PDF)](Documents/)
 
-## Tech Stack (แนะนำ)
+## Tech Stack
 
-- **Frontend:** React.js / Next.js
-- **Backend:** Node.js + Express / NestJS
-- **Database:** PostgreSQL
-- **ORM:** Prisma / TypeORM
+- **OS:** Ubuntu (รันบน VirtualBox)
+- **Web Server:** Apache
+- **Backend:** PHP 8.x (Core PHP)
+- **Database:** MySQL (MariaDB)
+- **Frontend:** HTML5 + CSS3 (Responsive Design with Bootstrap 5)
 
 ## การติดตั้ง
 

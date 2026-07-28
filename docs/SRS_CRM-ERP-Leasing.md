@@ -44,8 +44,16 @@
 
 ### 2.1 สถาปัตยกรรมระบบ
 ```
-[Web Browser] → [Frontend (React/Next.js)] → [REST API] → [Backend (Node.js)] → [Database (PostgreSQL)]
+[Web Browser (Responsive HTML+CSS)] → [Apache Web Server] → [PHP (Core PHP)]
+                                                               ↓
+                                                       [MySQL Database]
 ```
+- **ระบบเป็น Website Responsive** รองรับการใช้งานบนทุกอุปกรณ์ (Desktop, Tablet, Mobile)
+- ทำงานบน **Ubuntu OS** ใน VirtualBox
+- เว็บเซิร์ฟเวอร์: **Apache**
+- ฐานข้อมูล: **MySQL**
+- ภาษา Backend: **PHP** (เขียนแบบ Core PHP ไม่ใช้ Framework)
+- Frontend: **HTML + CSS** (ออกแบบให้ Responsive)
 
 ### 2.2 ความสัมพันธ์ระหว่างโมดูล
 ```
@@ -473,19 +481,7 @@ Product (1) ──→ (N) ProductSpecification
 
 ---
 
-## 5. ข้อกำหนดด้านความปลอดภัย
-
-| รหัส | รายการ | คำอธิบาย |
-|------|--------|----------|
-| SEC-01 | การยืนยันตัวตน (Authentication) | ใช้ JWT (JSON Web Token) สำหรับการล็อกอิน |
-| SEC-02 | การกำหนดสิทธิ์ (Authorization) | กำหนดสิทธิ์ตาม Role (Admin, Sales, Manager, Accountant) |
-| SEC-03 | การเข้ารหัสรหัสผ่าน | เข้ารหัสด้วย bcrypt |
-| SEC-04 | การเข้ารหัสข้อมูลสำคัญ | ข้อมูลสำคัญเช่น Tax ID ควรเข้ารหัสในฐานข้อมูล |
-| SEC-05 | Audit Log | บันทึกการแก้ไขข้อมูลสำคัญทั้งหมด (ใคร แก้อะไร เมื่อไหร่) |
-| SEC-06 | การสำรองข้อมูล | สำรองข้อมูลอัตโนมัติทุกวัน |
-| SEC-07 | HTTPS | ทุกการเชื่อมต่อต้องใช้ HTTPS |
-
-### 5.1 สิทธิ์การเข้าถึงแบ่งตาม Role
+## 5. สิทธิ์การเข้าถึงแบ่งตาม Role (Role-Based Access Control)
 
 | ฟังก์ชัน | Admin | Manager | Sales | Accountant |
 |----------|-------|---------|-------|------------|
@@ -502,74 +498,256 @@ Product (1) ──→ (N) ProductSpecification
 
 ---
 
-## 6. ข้อกำหนดด้านเทคนิค
+## 6. ข้อกำหนดด้านเทคนิค (Technical Specifications)
+
+### 6.1 สภาพแวดล้อมการพัฒนาและติดตั้ง (Environment)
 
 | หัวข้อ | รายละเอียด |
 |--------|------------|
-| Frontend Framework | React.js / Next.js |
-| Backend Framework | Node.js + Express หรือ NestJS |
-| ฐานข้อมูล | PostgreSQL |
-| ORM | Prisma หรือ TypeORM |
-| Authentication | JWT + bcrypt |
-| API Design | RESTful API |
-| File Storage | Local หรือ Cloud (S3/Cloud Storage) |
-| PDF Generation | Puppeteer หรือ PDFKit |
-| การส่งอีเมล | Nodemailer หรือ SendGrid |
+| ระบบปฏิบัติการ | **Ubuntu** (รันบน VirtualBox) |
+| เว็บเซิร์ฟเวอร์ | **Apache** (พร้อม mod_rewrite) |
+| ฐานข้อมูล | **MySQL** (MariaDB) |
+| ภาษา Backend | **PHP** 8.x (Core PHP, ไม่ใช้ Framework) |
+| Frontend | **HTML5 + CSS3** (Responsive Design) |
+| Responsive Framework | **Bootstrap 5** หรือ CSS Media Queries |
 | Version Control | Git + GitHub |
-| Containerization | Docker (optional) |
+| โฟลเดอร์โปรเจกต์ | `/var/www/html/crm-erp-leasing/` (บน Ubuntu) |
 
-### 6.1 API Endpoints (概要)
+### 6.2 โครงสร้างโปรเจกต์ (Directory Structure)
+
+```
+/var/www/html/crm-erp-leasing/
+│
+├── index.php                    # หน้า Login / หน้าแรก
+├── config/
+│   └── database.php             # การเชื่อมต่อฐานข้อมูล MySQL
+│   └── config.php               # ตั้งค่าต่าง ๆ ของระบบ
+│
+├── assets/
+│   ├── css/
+│   │   └── style.css            # ไฟล์ CSS หลัก (Responsive)
+│   ├── js/
+│   │   └── script.js            # JavaScript หลัก
+│   └── images/                  # รูปภาพ (โลโก้, รูปสินค้า)
+│
+├── modules/
+│   ├── company/                 # โมดูล Company Profile
+│   │   ├── index.php            # แสดงข้อมูลบริษัท
+│   │   ├── edit.php             # แก้ไขข้อมูลบริษัท
+│   │   ├── branches.php         # จัดการสาขา
+│   │   └── bank-accounts.php    # จัดการบัญชีธนาคาร
+│   │
+│   ├── quotation/               # โมดูล Quotation
+│   │   ├── index.php            # รายการ Quotation ทั้งหมด
+│   │   ├── create.php           # สร้าง Quotation ใหม่
+│   │   ├── edit.php             # แก้ไข Quotation
+│   │   ├── view.php             # ดู Quotation พร้อมพิมพ์
+│   │   ├── print.php            # พิมพ์ PDF
+│   │   └── approve.php          # อนุมัติ Quotation
+│   │
+│   ├── prospect/                # โมดูล Prospect
+│   │   ├── index.php            # รายการ Prospect
+│   │   ├── create.php           # เพิ่ม Prospect
+│   │   ├── edit.php             # แก้ไข Prospect
+│   │   └── convert.php          # แปลงเป็น Customer
+│   │
+│   ├── customer/                # โมดูล Customer
+│   │   ├── index.php            # รายการ Customer
+│   │   ├── create.php           # เพิ่ม Customer
+│   │   ├── edit.php             # แก้ไข Customer
+│   │   ├── view.php             # ดูรายละเอียด Customer
+│   │   └── import.php           # นำเข้า Excel/CSV
+│   │
+│   ├── product/                 # โมดูล Product
+│   │   ├── index.php            # รายการสินค้า
+│   │   ├── create.php           # เพิ่มสินค้า
+│   │   ├── edit.php             # แก้ไขสินค้า
+│   │   └── categories.php       # จัดการหมวดหมู่
+│   │
+│   └── report/                  # โมดูลรายงาน
+│       ├── index.php            # หน้ารายงานหลัก
+│       └── quotation_report.php # รายงาน Quotation
+│
+├── includes/
+│   ├── header.php               # ส่วนหัวเว็บ (Navbar, เมนู)
+│   ├── footer.php               # ส่วนท้ายเว็บ
+│   ├── auth.php                 # ตรวจสอบสิทธิ์ผู้ใช้
+│   └── functions.php            # ฟังก์ชัน共用ของระบบ
+│
+├── auth/
+│   ├── login.php                # ฟอร์มล็อกอิน
+│   ├── logout.php               # ออกจากระบบ
+│   └── change_password.php      # เปลี่ยนรหัสผ่าน
+│
+└── sql/
+    └── schema.sql               # โครงสร้างฐานข้อมูล MySQL
+    └── seed.sql                 # ข้อมูลเริ่มต้น (Initial Data)
+```
+
+### 6.3 รูปแบบการเชื่อมต่อฐานข้อมูล (Database Connection)
+
+```php
+<?php
+// config/database.php
+$host = 'localhost';
+$dbname = 'crm_erp_leasing';
+$username = 'root';
+$password = 'your_password';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+```
+
+### 6.4 รูปแบบการเขียน PHP (PHP Patterns)
+
+| หัวข้อ | รายละเอียด |
+|--------|------------|
+| Database Access | **PDO** (PHP Data Objects) - Prepared Statements ป้องกัน SQL Injection |
+| Session Management | PHP `$_SESSION` สำหรับ Authentication |
+| Form Handling | `$_POST` / `$_GET` พร้อม Validation ทั้ง Client-side (JS) และ Server-side (PHP) |
+| HTML Template | PHP ตีพิมพ์ HTML โดยใช้ `include/require` แยก Header/Footer |
+| File Upload | `$_FILES` สำหรับอัปโหลดรูปสินค้าและโลโก้ |
+| PDF Generation | **TCPDF** หรือ **FPDF** (PHP Library) สำหรับพิมพ์ Quotation |
+| Export | PHPExcel / PhpSpreadsheet สำหรับส่งออก Excel |
+
+### 6.5 Responsive Design Specifications
+
+| เบรกพอยต์ | ขนาดหน้าจอ | อุปกรณ์ |
+|-----------|-----------|---------|
+| xs | < 576px | มือถือ |
+| sm | ≥ 576px | มือถือแนวนอน |
+| md | ≥ 768px | แท็บเล็ต |
+| lg | ≥ 992px | เดสก์ท็อป |
+| xl | ≥ 1200px | เดสก์ท็อปใหญ่ |
+
+**ข้อกำหนด Responsive:**
+- เมนูหลัก: บนมือถือเปลี่ยนเป็น Hamburger Menu
+- ตารางข้อมูล: บนมือถือเปลี่ยนเป็น Card Layout หรือ Scroll แนวนอน
+- ฟอร์ม: Layout ปรับเป็นแนวตั้งบนมือถือ
+- ปุ่ม actions: ย่อขนาดให้เหมาะสมกับ touch screen
+- ฟอนต์: ใช้ฟอนต์ที่อ่านง่าย ขนาดปรับตามหน้าจอ (ใช้ `rem` หรือ `vw`)
+
+### 6.6 ตัวอย่าง URL Structure (PHP Pages)
 
 #### Company Profile
 ```
-GET    /api/v1/company              - ดึงข้อมูลบริษัท
-PUT    /api/v1/company              - แก้ไขข้อมูลบริษัท
-POST   /api/v1/company/branches     - เพิ่มสาขา
-GET    /api/v1/company/branches     - ดึงรายการสาขา
-POST   /api/v1/company/bank-accounts - เพิ่มบัญชีธนาคาร
+/crm-erp-leasing/                            - หน้าแรก (Dashboard)
+/crm-erp-leasing/modules/company/index.php   - ดูข้อมูลบริษัท
+/crm-erp-leasing/modules/company/edit.php    - แก้ไขข้อมูลบริษัท
 ```
 
 #### Quotation
 ```
-GET    /api/v1/quotations           - ดึงรายการ Quotation
-GET    /api/v1/quotations/:id       - ดึง Quotation ตาม ID
-POST   /api/v1/quotations           - สร้าง Quotation ใหม่
-PUT    /api/v1/quotations/:id       - แก้ไข Quotation
-PATCH  /api/v1/quotations/:id/status - เปลี่ยนสถานะ
-DELETE /api/v1/quotations/:id       - ลบ Quotation (เฉพาะ Draft)
-POST   /api/v1/quotations/:id/send-email - ส่งอีเมล
-GET    /api/v1/quotations/:id/pdf   - ดาวน์โหลด PDF
+/crm-erp-leasing/modules/quotation/index.php    - รายการ Quotation
+/crm-erp-leasing/modules/quotation/create.php   - สร้าง Quotation
+/crm-erp-leasing/modules/quotation/view.php?id=1 - ดู Quotation
+/crm-erp-leasing/modules/quotation/print.php?id=1 - พิมพ์ PDF
+/crm-erp-leasing/modules/quotation/approve.php?id=1 - อนุมัติ
 ```
 
 #### Prospect
 ```
-GET    /api/v1/prospects            - ดึงรายการ Prospect
-POST   /api/v1/prospects            - เพิ่ม Prospect
-PUT    /api/v1/prospects/:id        - แก้ไข Prospect
-PATCH  /api/v1/prospects/:id/convert - แปลงเป็น Customer
-POST   /api/v1/prospects/:id/activity - บันทึกกิจกรรม
+/crm-erp-leasing/modules/prospect/index.php     - รายการ Prospect
+/crm-erp-leasing/modules/prospect/create.php    - เพิ่ม Prospect
+/crm-erp-leasing/modules/prospect/edit.php?id=1 - แก้ไข
+/crm-erp-leasing/modules/prospect/convert.php?id=1 - แปลงเป็น Customer
 ```
 
 #### Customer
 ```
-GET    /api/v1/customers            - ดึงรายการ Customer
-GET    /api/v1/customers/:id        - ดึง Customer ตาม ID
-POST   /api/v1/customers            - เพิ่ม Customer
-PUT    /api/v1/customers/:id        - แก้ไข Customer
-GET    /api/v1/customers/:id/quotations - ดูประวัติ Quotation
-POST   /api/v1/customers/import     - นำเข้าจาก Excel/CSV
-GET    /api/v1/customers/export     - ส่งออกเป็น Excel/CSV
+/crm-erp-leasing/modules/customer/index.php     - รายการ Customer
+/crm-erp-leasing/modules/customer/create.php    - เพิ่ม Customer
+/crm-erp-leasing/modules/customer/view.php?id=1 - ดูรายละเอียด
 ```
 
 #### Product
 ```
-GET    /api/v1/products             - ดึงรายการสินค้า
-GET    /api/v1/products/:id         - ดึงสินค้าตาม ID
-POST   /api/v1/products             - เพิ่มสินค้า
-PUT    /api/v1/products/:id         - แก้ไขสินค้า
-DELETE /api/v1/products/:id         - ลบสินค้า
-GET    /api/v1/products/categories  - ดึงหมวดหมู่สินค้า
-POST   /api/v1/products/categories  - เพิ่มหมวดหมู่สินค้า
+/crm-erp-leasing/modules/product/index.php      - รายการสินค้า
+/crm-erp-leasing/modules/product/create.php     - เพิ่มสินค้า
+/crm-erp-leasing/modules/product/edit.php?id=1  - แก้ไขสินค้า
+/crm-erp-leasing/modules/product/categories.php - จัดการหมวดหมู่
+```
+
+### 6.7 การรักษาความปลอดภัย (Security)
+
+| รหัส | รายการ | คำอธิบาย |
+|------|--------|----------|
+| SEC-01 | Prepared Statements | ใช้ PDO Prepared Statements ป้องกัน SQL Injection |
+| SEC-02 | Password Hashing | ใช้ `password_hash()` และ `password_verify()` ของ PHP |
+| SEC-03 | Session Security | ใช้ Session ตรวจสอบการล็อกอิน กำหนด timeout |
+| SEC-04 | Input Validation | Validate ข้อมูลทุกครั้งทั้งฝั่ง Client และ Server |
+| SEC-05 | XSS Protection | ใช้ `htmlspecialchars()` เมื่อแสดงข้อมูลที่รับจากผู้ใช้ |
+| SEC-06 | File Upload Security | ตรวจสอบนามสกุลและขนาดไฟล์ก่อนอัปโหลด |
+| SEC-07 | CSRF Protection | ใช้ CSRF Token ในฟอร์มสำคัญ |
+| SEC-08 | Role-based Access | ตรวจสอบสิทธิ์ผู้ใช้ทุกหน้าก่อนแสดงข้อมูล |
+| SEC-09 | การสำรองข้อมูล | MySQL Dump อัตโนมัติด้วย cron job |
+| SEC-10 | ไฟล์ .htaccess | ป้องกันการเข้าถึงโฟลเดอร์สำคัญโดยตรง |
+
+### 6.8 ตัวอย่างโค้ด PHP (Code Example)
+
+**การดึงข้อมูลมาแสดงบนเว็บ:**
+```php
+<?php
+// modules/quotation/index.php
+require_once '../../config/database.php';
+require_once '../../includes/auth.php';
+
+// ตรวจสอบสิทธิ์
+checkLogin();
+
+// ดึงข้อมูล Quotation จาก MySQL
+$stmt = $pdo->query("
+    SELECT q.*, c.company_name, c.first_name, c.last_name
+    FROM quotations q
+    LEFT JOIN customers c ON q.customer_id = c.customer_id
+    ORDER BY q.created_at DESC
+");
+$quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php include '../../includes/header.php'; ?>
+
+<div class="container">
+    <h1>รายการใบเสนอราคา</h1>
+    <a href="create.php" class="btn btn-primary">สร้างใบเสนอราคาใหม่</a>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>เลขที่</th>
+                    <th>ลูกค้า</th>
+                    <th>วันที่</th>
+                    <th>จำนวนเงิน</th>
+                    <th>สถานะ</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($quotations as $q): ?>
+                <tr>
+                    <td><?= htmlspecialchars($q['quotation_no']) ?></td>
+                    <td><?= htmlspecialchars($q['company_name'] ?? $q['first_name'] . ' ' . $q['last_name']) ?></td>
+                    <td><?= htmlspecialchars($q['issue_date']) ?></td>
+                    <td class="text-end"><?= number_format($q['grand_total'], 2) ?></td>
+                    <td><?= htmlspecialchars($q['status']) ?></td>
+                    <td>
+                        <a href="view.php?id=<?= $q['quotation_id'] ?>" class="btn btn-sm btn-info">ดู</a>
+                        <a href="print.php?id=<?= $q['quotation_id'] ?>" class="btn btn-sm btn-secondary">พิมพ์</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php include '../../includes/footer.php'; ?>
 ```
 
 ---

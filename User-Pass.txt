@@ -1,6 +1,0 @@
-VirtualBox Ubuntu
-Name: CRM-ERP-Leasing
-User: vboxuser
-Pass: 123
-======================
-

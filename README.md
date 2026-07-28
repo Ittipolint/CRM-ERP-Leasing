@@ -22,6 +22,35 @@
 - **Database:** MySQL (MariaDB)
 - **Frontend:** HTML5 + CSS3 (Responsive Design with Bootstrap 5)
 
-## การติดตั้ง
+## การติดตั้ง (ระบบพัฒนาแล้ว)
 
-(อยู่ระหว่างการพัฒนา)
+ระบบ CRM-ERP-Leasing ได้ถูกพัฒนาตาม SRS และติดตั้งบน VM VirtualBox แล้ว
+
+### สภาพแวดล้อมการทำงานจริง
+- **VM:** Ubuntu 26.04 บน VirtualBox
+- **IP:** 192.168.1.54
+- **Web:** http://192.168.1.54/crm-erp-leasing/
+- **User:** admin / admin123
+
+### Tech Stack ที่ใช้
+- **OS:** Ubuntu (VirtualBox)
+- **Web Server:** Apache
+- **Backend:** PHP 8.5 (Core PHP)
+- **Database:** MySQL 8.4
+- **Frontend:** HTML5 + CSS3 (Bootstrap 5, Responsive)
+
+### โครงสร้างระบบ
+```
+/var/www/html/crm-erp-leasing/
+├── config/          # การตั้งค่า DB และระบบ
+├── includes/        # Header, Footer, Auth, Functions
+├── auth/            # Login, Logout, เปลี่ยนรหัสผ่าน
+├── assets/          # CSS, JS, รูปภาพ
+└── modules/
+    ├── company/     # จัดการข้อมูลบริษัท
+    ├── quotation/   # ใบเสนอราคา (ขายสด/เช่า)
+    ├── prospect/    # โอกาสขาย
+    ├── customer/    # ข้อมูลลูกค้า
+    ├── product/     # สินค้าและหมวดหมู่
+    └── report/      # รายงาน
+```

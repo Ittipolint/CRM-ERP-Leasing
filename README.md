@@ -88,3 +88,6 @@
 | 2026-07-29 | **Fix:** addItemRow ใช้ insertRow + template innerHTML หุ้ม <select> เพื่อให้ dropdown ทุกแถว |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |
 | 2026-07-30 | **Feature:** ย้าย product dropdown ไปไว้หัวตาราง quotation พร้อมปุ่ม Add เลือก code ลงตาราง |
+| 2026-07-30 | **Feature:** เพิ่ม field รายละเอียด (description) ใน create/edit/view/print quotation |
+| 2026-07-30 | **Feature:** คลิกแถวใน view quotation → ไปหน้าแก้ไข |
+| 2026-07-30 | **Fix:** ลบ required จาก readOnly fields, เพิ่ม novalidate ป้องกัน browser validation block |

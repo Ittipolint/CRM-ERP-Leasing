@@ -87,3 +87,4 @@
 | 2026-07-29 | **Feature:** Print quotation แสดงคอลัมน์รายละเอียด |
 | 2026-07-29 | **Fix:** addItemRow ใช้ insertRow + template innerHTML หุ้ม <select> เพื่อให้ dropdown ทุกแถว |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |
+| 2026-07-30 | **Feature:** ย้าย product dropdown ไปไว้หัวตาราง quotation พร้อมปุ่ม Add เลือก code ลงตาราง |

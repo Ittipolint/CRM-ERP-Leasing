@@ -881,7 +881,7 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 | หน้าจอ | ฟิลด์สถานะ | รายละเอียด |
 |--------|-----------|------------|
 | รายการสินค้า (`modules/product/index.php`) | `status` (active/inactive) | ปุ่ม Power ที่แถวของสินค้าแต่ละรายการ, กรองตามสถานะได้ |
-| จัดการหมวดหมู่สินค้า (`modules/product/categories.php`) | `is_active` (1/0) | ปุ่ม Power ที่แถวของหมวดหมู่แต่ละรายการ, แสดง Badge สถานะ |
+| จัดการหมวดหมู่สินค้า (`modules/product/categories.php`) | `is_active` (1/0) | ปุ่ม Power ที่แถวของหมวดหมู่แต่ละรายการ, แสดง Badge สถานะ, เพิ่ม/แก้ไข modal มีฟิลด์สถานะ |
 | รายการลูกค้า (`modules/customer/index.php`) | `status` (active/inactive) | ปุ่ม Power ที่แถวของลูกค้าแต่ละรายการ |
 
 ### 8.3 รายละเอียดการทำงาน (Product Toggle)

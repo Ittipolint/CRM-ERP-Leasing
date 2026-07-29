@@ -79,4 +79,5 @@
 | 2026-07-29 | **Fix:** FK ON DELETE Rules (RESTRICT for products.category_id & quotation_items.product_id) |
 | 2026-07-29 | **Fix:** Remove PHP dual-writes in company/edit, quotation/create, quotation/edit |
 | 2026-07-29 | **Feature:** Active/Inactive Toggle สำหรับ Master Data (สินค้า, หมวดหมู่สินค้า, ลูกค้า) |
+| 2026-07-29 | **Feature:** เพิ่ม/แก้ไขหมวดหมู่สินค้ามีฟิลด์สถานะ (is_active) ใน Modal |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |

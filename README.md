@@ -85,5 +85,5 @@
 | 2026-07-29 | **Feature:** Product Dropdown ใน Quotation create/edit พร้อม Auto-fill ราคา |
 | 2026-07-29 | **Fix:** calculateRow ใช้ [name^=item_qty] แทน .auto-calc เพื่อให้คำนวณถูกต้องทุกแถว |
 | 2026-07-29 | **Feature:** Print quotation แสดงคอลัมน์รายละเอียด |
-| 2026-07-29 | **Fix:** addItemRow ใช้ outerHTML แทน cloneNode(true) เพื่อให้ product-select ทำงานในแถวที่ 2+ |
+| 2026-07-29 | **Fix:** addItemRow ใช้ insertRow+innerHTML template แทน cloneNode/outerHTML เพื่อให้ product-select ทุกแถว |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |

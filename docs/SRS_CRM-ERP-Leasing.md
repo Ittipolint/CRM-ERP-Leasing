@@ -917,13 +917,21 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 |-------------|-------------------|------------------|
 | เพิ่มสินค้า (`modules/product/create.php`) | หมวดหมู่สินค้า | `WHERE is_active = 1` |
 | แก้ไขสินค้า (`modules/product/edit.php`) | หมวดหมู่สินค้า | `WHERE is_active = 1` |
+| สร้างใบเสนอราคา (`modules/quotation/create.php`) | สินค้า (product dropdown) | `WHERE status = 'active'` |
+| แก้ไขใบเสนอราคา (`modules/quotation/edit.php`) | สินค้า (product dropdown) | `WHERE status = 'active'` |
 
-### 9.3 ตารางที่ไม่ต้องกรอง
+### 9.3 รายละเอียดการทำงาน (Quotation Product Dropdown)
+- **Dropdown สินค้า:** เพิ่มคอลัมน์ "สินค้า" ในตารางรายการสินค้าของหน้าสร้าง/แก้ไขใบเสนอราคา
+- **Auto-fill:** เมื่อเลือกสินค้าจาก Dropdown จะ Auto-fill ชื่อสินค้าและราคาต่อหน่วยโดยอัตโนมัติ
+- **ป้อนเอง:** มีตัวเลือก "-- ป้อนเอง --" สำหรับกรณีที่ต้องการป้อนรายการที่ไม่ใช่สินค้าในระบบ
+- **Read-only:** เมื่อเลือกสินค้าจากระบบ ฟิลด์ชื่อและราคาจะเป็น Read-only เพื่อป้องกันการแก้ไขผิดพลาด
+- **JS Logic:** ใช้ `data-code`, `data-name`, `data-price` attributes ใน `<option>` เพื่อส่งข้อมูลไปยัง JavaScript
+
+### 9.6 ตารางที่ไม่ต้องกรอง
 - **ลูกค้า (customers)** - ฟอร์ม Quotation ทั้ง create และ edit มี `WHERE status = 'active'` อยู่แล้วตั้งแต่เริ่มต้น
-- **สินค้า (products)** - ฟอร์ม Quotation มี `WHERE status = 'active'` อยู่แล้ว (query เดิมที่ไม่ได้ใช้งานจริง)
 - **ข้อมูลบริษัท (companies)** - มีเพียง 1 รายการ ไม่มี Dropdown ให้เลือก
 
-### 9.4 หมายเหตุ
+### 9.7 หมายเหตุ
 - Filter Dropdown ในหน้าค้นหา (เช่น หมวดหมู่สินค้าในหน้ารายการสินค้า) **ไม่ถูกกรอง** เพื่อให้สามารถค้นหาข้อมูลเก่าที่อาจถูกปิดการใช้งานไปแล้วได้
 - การทำงานนี้เป็นการป้องกันที่ฝั่ง **PHP Query** (`WHERE is_active = 1`) ร่วมกับ **UI** ที่ไม่ต้องพึ่ง JavaScript
 

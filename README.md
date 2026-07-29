@@ -81,4 +81,6 @@
 | 2026-07-29 | **Feature:** Active/Inactive Toggle สำหรับ Master Data (สินค้า, หมวดหมู่สินค้า, ลูกค้า) |
 | 2026-07-29 | **Feature:** เพิ่ม/แก้ไขหมวดหมู่สินค้ามีฟิลด์สถานะ (is_active) ใน Modal |
 | 2026-07-29 | **Fix:** ซ่อน Inactive Reference Data จาก Dropdown (product create/edit กรองเฉพาะ is_active=1) |
+| 2026-07-29 | **Fix:** แก้ไข INSERT quotations column mismatch (มี `?` เกิน 1 ตัว) |
+| 2026-07-29 | **Feature:** Product Dropdown ใน Quotation create/edit พร้อม Auto-fill ราคา |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |

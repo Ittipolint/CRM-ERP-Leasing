@@ -91,3 +91,4 @@
 | 2026-07-30 | **Feature:** เพิ่ม field รายละเอียด (description) ใน create/edit/view/print quotation |
 | 2026-07-30 | **Feature:** คลิกแถวใน view quotation → ไปหน้าแก้ไข |
 | 2026-07-30 | **Fix:** ลบ required จาก readOnly fields, เพิ่ม novalidate ป้องกัน browser validation block |
+| 2026-07-30 | **Feature:** เพิ่มฟังก์ชันลบ Quotation (delete.php) + ปุ่มลบใน index และ view |

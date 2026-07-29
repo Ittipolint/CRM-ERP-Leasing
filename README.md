@@ -83,4 +83,6 @@
 | 2026-07-29 | **Fix:** ซ่อน Inactive Reference Data จาก Dropdown (product create/edit กรองเฉพาะ is_active=1) |
 | 2026-07-29 | **Fix:** แก้ไข INSERT quotations column mismatch (มี `?` เกิน 1 ตัว) |
 | 2026-07-29 | **Feature:** Product Dropdown ใน Quotation create/edit พร้อม Auto-fill ราคา |
+| 2026-07-29 | **Fix:** calculateRow ใช้ [name^=item_qty] แทน .auto-calc เพื่อให้คำนวณถูกต้องทุกแถว |
+| 2026-07-29 | **Feature:** Print quotation แสดงคอลัมน์รายละเอียด |
 | 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |

@@ -927,6 +927,11 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 - **Read-only:** เมื่อเลือกสินค้าจากระบบ ฟิลด์ชื่อและราคาจะเป็น Read-only เพื่อป้องกันการแก้ไขผิดพลาด
 - **JS Logic:** ใช้ `data-code`, `data-name`, `data-price` attributes ใน `<option>` เพื่อส่งข้อมูลไปยัง JavaScript
 
+### 9.4 การพิมพ์ใบเสนอราคา (Print Quotation)
+- **คอลัมน์รายละเอียด:** เพิ่มคอลัมน์ "รายละเอียด" ในตารางสินค้าของหน้าพิมพ์ (`modules/quotation/print.php`)
+- **โครงสร้างตารางพิมพ์:** `# | รายการ | รายละเอียด | จำนวน | ราคาต่อหน่วย | รวม`
+- ข้อมูลแสดงจากฟิลด์ `item_name` ในตาราง `quotation_items`
+
 ### 9.6 ตารางที่ไม่ต้องกรอง
 - **ลูกค้า (customers)** - ฟอร์ม Quotation ทั้ง create และ edit มี `WHERE status = 'active'` อยู่แล้วตั้งแต่เริ่มต้น
 - **ข้อมูลบริษัท (companies)** - มีเพียง 1 รายการ ไม่มี Dropdown ให้เลือก

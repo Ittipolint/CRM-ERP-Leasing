@@ -820,6 +820,55 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ---
 
+---
+
+## 7. ข้อกำหนดด้านความสัมพันธ์ของข้อมูล (Referential Integrity)
+
+### 7.1 Foreign Key Constraints
+
+| FK Constraint | ตารางต้นทาง | ตารางปลายทาง | กฎ ON DELETE |
+|--------------|-------------|-------------|--------------|
+| `company_branches.company_id` | company_branches | companies | CASCADE |
+| `bank_accounts.company_id` | bank_accounts | companies | CASCADE |
+| `prospects.assigned_to` | prospects | users | SET NULL |
+| `prospects.created_by` | prospects | users | SET NULL |
+| `prospects.converted_to_customer_id` | prospects | customers | SET NULL |
+| `customers.created_by` | customers | users | SET NULL |
+| `customer_contacts.customer_id` | customer_contacts | customers | CASCADE |
+| `customer_addresses.customer_id` | customer_addresses | customers | CASCADE |
+| `product_categories.parent_id` | product_categories | product_categories | SET NULL |
+| `products.category_id` | products | product_categories | SET NULL |
+| `product_prices.product_id` | product_prices | products | CASCADE |
+| `product_images.product_id` | product_images | products | CASCADE |
+| `product_specifications.product_id` | product_specifications | products | CASCADE |
+| `quotations.customer_id` | quotations | customers | RESTRICT |
+| `quotations.company_id` | quotations | companies | SET NULL |
+| `quotations.created_by` | quotations | users | SET NULL |
+| `quotations.approved_by` | quotations | users | SET NULL |
+| `quotation_items.quotation_id` | quotation_items | quotations | CASCADE |
+| `quotation_items.product_id` | quotation_items | products | SET NULL |
+| `activity_logs.performed_by` | activity_logs | users | SET NULL |
+
+### 7.2 NOT NULL Constraints ที่สำคัญ
+
+| ตาราง | คอลัมน์ | เหตุผล |
+|-------|---------|--------|
+| customers | address | จำเป็นสำหรับการออกใบเสนอราคา |
+| prospects | address, created_by | จำเป็นสำหรับติดตามและบันทึกผู้สร้าง |
+| quotations | type, quotation_date | จำเป็นสำหรับใบเสนอราคา |
+
+### 7.3 UNIQUE Constraints
+
+| ตาราง | คอลัมน์ | คำอธิบาย |
+|-------|---------|----------|
+| companies | tax_id | เลขผู้เสียภาษีไม่ซ้ำกัน |
+| users | username | ชื่อผู้ใช้ไม่ซ้ำกัน |
+| products | product_code | รหัสสินค้าไม่ซ้ำกัน |
+| customers | tax_id, customer_code | เลขผู้เสียภาษีและรหัสลูกค้าไม่ซ้ำกัน |
+| quotations | quotation_no | เลขที่ใบเสนอราคาไม่ซ้ำกัน |
+
+---
+
 > **หมายเหตุ:** เอกสารนี้เป็น Software Requirements Specification (SRS) เบื้องต้น สำหรับให้ทีมพัฒนาใช้เป็นแนวทางในการพัฒนาระบบ สามารถปรับแก้ไขเพิ่มเติมตามความเหมาะสม
 >
 > จัดทำโดย: ทีมวิศวกรรมซอฟต์แวร์

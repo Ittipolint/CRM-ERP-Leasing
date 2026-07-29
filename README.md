@@ -76,3 +76,7 @@
 | 2026-07-29 | **UI Overhaul:** Professional ERP Theme, โลโก้ Genive Green, Dashboard การ์ดเท่ากัน |
 | 2026-07-29 | **Fix:** SQL Column Mismatches, Relative Paths, CRUD Operations ทั้งหมด |
 | 2026-07-29 | **Feature:** Product Categories, Company Branches, Bank Accounts |
+| 2026-07-29 | **Fix:** FK ON DELETE Rules (RESTRICT for products.category_id & quotation_items.product_id) |
+| 2026-07-29 | **Fix:** Remove PHP dual-writes in company/edit, quotation/create, quotation/edit |
+| 2026-07-29 | **Feature:** Active/Inactive Toggle สำหรับ Master Data (สินค้า, หมวดหมู่สินค้า, ลูกค้า) |
+| 2026-07-29 | **Test:** 23 constraint/CRUD tests all pass |

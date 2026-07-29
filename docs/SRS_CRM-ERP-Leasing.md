@@ -15,6 +15,8 @@
 4. [ข้อกำหนดด้านข้อมูล (Data Dictionary)](#4-ข้อกำหนดด้านข้อมูล-data-dictionary)
 5. [ข้อกำหนดด้านความปลอดภัย](#5-ข้อกำหนดด้านความปลอดภัย)
 6. [ข้อกำหนดด้านเทคนิค](#6-ข้อกำหนดด้านเทคนิค)
+7. [ข้อกำหนดด้านความสัมพันธ์ของข้อมูล](#7-ข้อกำหนดด้านความสัมพันธ์ของข้อมูล-referential-integrity)
+8. [ฟังก์ชันเปิด/ปิดใช้งานข้อมูล](#8-ฟังก์ชันเปิดปิดใช้งานข้อมูล-activeinactive-toggle)
 
 ---
 
@@ -837,7 +839,7 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 | `customer_contacts.customer_id` | customer_contacts | customers | CASCADE |
 | `customer_addresses.customer_id` | customer_addresses | customers | CASCADE |
 | `product_categories.parent_id` | product_categories | product_categories | SET NULL |
-| `products.category_id` | products | product_categories | SET NULL |
+| `products.category_id` | products | product_categories | **RESTRICT** |
 | `product_prices.product_id` | product_prices | products | CASCADE |
 | `product_images.product_id` | product_images | products | CASCADE |
 | `product_specifications.product_id` | product_specifications | products | CASCADE |
@@ -846,7 +848,7 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 | `quotations.created_by` | quotations | users | SET NULL |
 | `quotations.approved_by` | quotations | users | SET NULL |
 | `quotation_items.quotation_id` | quotation_items | quotations | CASCADE |
-| `quotation_items.product_id` | quotation_items | products | SET NULL |
+| `quotation_items.product_id` | quotation_items | products | **RESTRICT** |
 | `activity_logs.performed_by` | activity_logs | users | SET NULL |
 
 ### 7.2 NOT NULL Constraints ที่สำคัญ
@@ -866,6 +868,40 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 | products | product_code | รหัสสินค้าไม่ซ้ำกัน |
 | customers | tax_id, customer_code | เลขผู้เสียภาษีและรหัสลูกค้าไม่ซ้ำกัน |
 | quotations | quotation_no | เลขที่ใบเสนอราคาไม่ซ้ำกัน |
+
+---
+
+## 8. ฟังก์ชันเปิด/ปิดใช้งานข้อมูล (Active/Inactive Toggle)
+
+### 8.1 ภาพรวม
+เพิ่มปุ่มเปิด/ปิดสถานะ (Toggle Active/Inactive) สำหรับข้อมูลหลัก (Master Data) เพื่อให้ผู้ใช้สามารถเปลี่ยนสถานะการใช้งานของรายการต่าง ๆ ได้โดยไม่ต้องเข้าหน้าแก้ไข
+
+### 8.2 หน้าจอที่มีฟังก์ชัน Toggle
+
+| หน้าจอ | ฟิลด์สถานะ | รายละเอียด |
+|--------|-----------|------------|
+| รายการสินค้า (`modules/product/index.php`) | `status` (active/inactive) | ปุ่ม Power ที่แถวของสินค้าแต่ละรายการ, กรองตามสถานะได้ |
+| จัดการหมวดหมู่สินค้า (`modules/product/categories.php`) | `is_active` (1/0) | ปุ่ม Power ที่แถวของหมวดหมู่แต่ละรายการ, แสดง Badge สถานะ |
+| รายการลูกค้า (`modules/customer/index.php`) | `status` (active/inactive) | ปุ่ม Power ที่แถวของลูกค้าแต่ละรายการ |
+
+### 8.3 รายละเอียดการทำงาน (Product Toggle)
+- **ช่องค้นหาสถานะ:** เพิ่ม Dropdown filter "ทุกสถานะ / ใช้งาน / ไม่ใช้งาน" ในฟอร์มค้นหา
+- **ปุ่ม Toggle:** ปุ่มไอคอน Power (`bi-power`) สีส้ม (เมื่อเปิด) หรือสีเขียว (เมื่อปิด)
+- **การทำงาน:** เมื่อคลิกปุ่ม สถานะจะเปลี่ยนจาก `active` → `inactive` หรือกลับกัน พร้อม CSRF Token ป้องกันการโจมตี
+- **การเปลี่ยนเส้นทาง:** หลังจาก toggle สำเร็จ จะรีไดเรกต์กลับมาหน้ารายการเดิม
+
+### 8.4 รายละเอียดการทำงาน (Category Toggle)
+- **Badge สถานะ:** เพิ่มคอลัมน์ "สถานะ" แสดง Badge สีเขียว "ใช้งาน" หรือสีเทา "ไม่ใช้งาน"
+- **ปุ่ม Toggle:** ปุ่มไอคอน Power เช่นเดียวกับสินค้า
+- **การทำงาน:** ใช้ฟิลด์ `is_active` (BOOLEAN) เปลี่ยนค่าระหว่าง 0 และ 1
+
+### 8.5 รายละเอียดการทำงาน (Customer Toggle)
+- **ปุ่ม Toggle:** เพิ่มปุ่ม Power ในคอลัมน์ Actions ถัดจากปุ่มดูและแก้ไข
+- **การทำงาน:** ใช้ฟิลด์ `status` (ENUM 'active'/'inactive') เปลี่ยนค่าระหว่างสองสถานะ
+
+### 8.6 การป้องกันความปลอดภัย
+- ทุกรายการ Toggle ใช้ **CSRF Token** (`generateCSRFToken()` / `verifyCSRFToken()`) ป้องกัน Cross-Site Request Forgery
+- ตรวจสอบสิทธิ์ผู้ใช้ผ่าน `requireLogin()` และ Role-Based Access Control เช่นเดียวกับหน้าอื่น
 
 ---
 

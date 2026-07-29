@@ -45,12 +45,34 @@
 ├── config/          # การตั้งค่า DB และระบบ
 ├── includes/        # Header, Footer, Auth, Functions
 ├── auth/            # Login, Logout, เปลี่ยนรหัสผ่าน
-├── assets/          # CSS, JS, รูปภาพ
+├── assets/
+│   ├── css/         # style.css (Professional ERP UI)
+│   ├── js/          # script.js
+│   └── img/         # โลโก้บริษัท
 └── modules/
-    ├── company/     # จัดการข้อมูลบริษัท
-    ├── quotation/   # ใบเสนอราคา (ขายสด/เช่า)
-    ├── prospect/    # โอกาสขาย
+    ├── company/     # จัดการข้อมูลบริษัท (Company Profile, สาขา, บัญชีธนาคาร)
+    ├── quotation/   # ใบเสนอราคา (ขายสด/เช่า) พร้อม Print
+    ├── prospect/    # โอกาสขาย (Leads)
     ├── customer/    # ข้อมูลลูกค้า
-    ├── product/     # สินค้าและหมวดหมู่
+    ├── product/     # สินค้าและหมวดหมู่สินค้า
     └── report/      # รายงาน
 ```
+
+## UI/UX การออกแบบ
+
+ระบบออกแบบด้วยโทน Professional ERP สีเขียว (Genive Green):
+- **Sidebar:** สีกรมท่า (#1a2035) พร้อมโลโก้บริษัท
+- **Primary Color:** #059669 (เขียว) พร้อม Hover Effect
+- **Cards:** มุมโค้งมน 14px, เงา Hover Effect
+- **Tables:** หัวตารางพื้นสีอ่อน, แถว Hover
+- **Dashboard:** การ์ดขนาดเท่ากันด้วยระบบ Grid Auto-layout (row-cols)
+- **Responsive:** รองรับทุกขนาดหน้าจอ (Mobile-first)
+- **Login:** Gradient Background, Floating Labels
+
+## Changelog
+
+| วันที่ | การเปลี่ยนแปลง |
+|-------|---------------|
+| 2026-07-29 | **UI Overhaul:** Professional ERP Theme, โลโก้ Genive Green, Dashboard การ์ดเท่ากัน |
+| 2026-07-29 | **Fix:** SQL Column Mismatches, Relative Paths, CRUD Operations ทั้งหมด |
+| 2026-07-29 | **Feature:** Product Categories, Company Branches, Bank Accounts |

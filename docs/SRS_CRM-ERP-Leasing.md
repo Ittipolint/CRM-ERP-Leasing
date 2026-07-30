@@ -251,7 +251,7 @@ Prospect ──→ Customer (เมื่อเปลี่ยนสถานะ
 - **PR-F02**: ค้นหา/กรอง Prospect (ตามชื่อ, เบอร์โทร, สถานะ, พนักงานขาย)
 - **PR-F03**: แก้ไขข้อมูล Prospect
 - **PR-F04**: แปลง Prospect เป็น Customer (เมื่อมีการซื้อ/ทำสัญญา)
-- **PR-F05**: บันทึกประวัติการติดต่อ (Call Log / Activity Log)
+- **PR-F06**: ลบ Prospect (พร้อมยืนยันก่อนลบ, ปุ่มลบในหน้ารายการและหน้าแก้ไข)
 
 **Customer**
 - **CT-F01**: เพิ่มลูกค้าใหม่ (นิติบุคคล/บุคคลธรรมดา)
@@ -259,6 +259,7 @@ Prospect ──→ Customer (เมื่อเปลี่ยนสถานะ
 - **CT-F03**: แก้ไขข้อมูลลูกค้า
 - **CT-F04**: จัดการผู้ติดต่อของลูกค้า (Contact Person)
 - **CT-F05**: จัดการที่อยู่ของลูกค้า (หลายที่อยู่ได้)
+- **CT-F06**: ลบลูกค้า (พร้อมยืนยันก่อนลบ, ปุ่มลบในหน้ารายการและหน้าแก้ไข)
 - **CT-F06**: ดูประวัติ Quotation และใบเสร็จของลูกค้า
 - **CT-F07**: ดูประวัติการติดต่อทั้งหมด
 - **CT-F08**: ส่งออกรายงานลูกค้า (Excel/CSV/PDF)
@@ -670,6 +671,7 @@ try {
 /crm-erp-leasing/modules/prospect/index.php     - รายการ Prospect
 /crm-erp-leasing/modules/prospect/create.php    - เพิ่ม Prospect
 /crm-erp-leasing/modules/prospect/edit.php?id=1 - แก้ไข
+/crm-erp-leasing/modules/prospect/delete.php?id=1 - ลบ
 /crm-erp-leasing/modules/prospect/convert.php?id=1 - แปลงเป็น Customer
 ```
 
@@ -678,6 +680,8 @@ try {
 /crm-erp-leasing/modules/customer/index.php     - รายการ Customer
 /crm-erp-leasing/modules/customer/create.php    - เพิ่ม Customer
 /crm-erp-leasing/modules/customer/view.php?id=1 - ดูรายละเอียด
+/crm-erp-leasing/modules/customer/edit.php?id=1 - แก้ไข
+/crm-erp-leasing/modules/customer/delete.php?id=1 - ลบ
 ```
 
 #### Product

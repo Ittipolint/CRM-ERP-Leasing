@@ -373,7 +373,7 @@ Product (1) ──→ (N) ProductSpecification
 - **PD-F08**: กำหนดสถานะสินค้า (มีสินค้า/หยุดจำหน่าย/มาใหม่)
 - **PD-F09**: ตั้งค่าราคาเช่าเริ่มต้น เช่น ราคาเช่าต่อเดือน
 - **PD-F10**: นำเข้าสินค้าจากไฟล์ Excel/CSV
-- **PD-F11**: ส่งออกรายการสินค้าเป็น Excel/CSV/PDF
+- **PD-F12**: ลบสินค้า (พร้อมยืนยันก่อนลบ, ปุ่มลบในหน้ารายการและหน้าแก้ไข)
 
 #### 3.4.4 ฟิลด์ข้อมูล
 
@@ -685,6 +685,7 @@ try {
 /crm-erp-leasing/modules/product/index.php      - รายการสินค้า
 /crm-erp-leasing/modules/product/create.php     - เพิ่มสินค้า
 /crm-erp-leasing/modules/product/edit.php?id=1  - แก้ไขสินค้า
+/crm-erp-leasing/modules/product/delete.php?id=1 - ลบสินค้า
 /crm-erp-leasing/modules/product/categories.php - จัดการหมวดหมู่
 ```
 

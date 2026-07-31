@@ -146,7 +146,7 @@ QuotationItem (N) ──→ (1) Product
 - **QT-F13**: ยกเลิก Quotation (Cancel)
 - **QT-F14**: คัดลอก Quotation ฉบับเดิมเพื่อสร้างฉบับใหม่
 - **QT-F15**: เลือกสินค้าจาก Dropdown ที่หัวตาราง (Product Selector) พร้อมปุ่ม Add
-- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์ใต้ชื่อรายการสินค้าบนใบ Quotation (Fallback ไปใช้ products.description ผ่าน product_id)
+- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์ใต้ชื่อรายการสินค้าบนใบ Quotation โดยใช้ **เฉพาะ field `products.description`** (ไม่ใช่ `product_name`/`product_name_en`) ผ่านตรรกะ: ใช้ `quotation_items.description` ก่อน แล้ว Fallback ไปใช้ `products.description` (JOIN ผ่าน `product_id`)
 - **QT-F17**: คลิกแถวสินค้าในหน้า View เพื่อไปยังหน้าแก้ไข Edit
 - **QT-F18**: ลบใบเสนอราคา (เฉพาะสถานะ Draft, แสดง error ถ้ามี FK constraint)
 
@@ -949,8 +949,13 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ### 9.4 การพิมพ์ใบเสนอราคา (Print Quotation)
 - **คอลัมน์รายละเอียด:** รายละเอียดสินค้าแสดงเป็นบรรทัดเล็ก (สีเทา) ใต้ชื่อรายการสินค้าแต่ละรายการในหน้าพิมพ์ (`modules/quotation/print.php`) และหน้า View
 - **โครงสร้างตารางพิมพ์:** `# | รายการ (+รายละเอียดใต้ชื่อ) | จำนวน | ราคาต่อหน่วย | รวม`
-- ข้อมูลแสดงจากฟิลด์ `item_name` ในตาราง `quotation_items`
-- **ที่มาของรายละเอียด:** บรรทัดรายละเอียดใต้ชื่อรายการแสดงจากฟิลด์ `quotation_items.description` ก่อน (คำอธิบายที่บันทึกตอนสร้างใบเสนอราคา); ถ้าเว้นว่าง ระบบจะ JOIN ตาราง `products` ด้วย `quotation_items.product_id` และแสดง `products.description` ล่าสุดเป็นค่า Fallback
+- ข้อมูลบรรทัดหลัก (ชื่อรายการ) แสดงจากฟิลด์ `item_name` ในตาราง `quotation_items`
+- **ที่มาของบรรทัดรายละเอียด (สำคัญ):** บรรทัดเล็กใต้ชื่อรายการจะแสดง **`products.description` เท่านั้น** ผ่านตรรกะต่อไปนี้:
+  1. ใช้ `quotation_items.description` (คำอธิบายที่ Auto-fill/บันทึกตอนสร้างใบเสนอราคา) ก่อน
+  2. ถ้าเว้นว่าง ระบบจะ `LEFT JOIN products p ON p.product_id = quotation_items.product_id` และแสดง `p.description AS product_description` ล่าสุดเป็นค่า Fallback
+  3. **ฟิลด์ `products.product_name`, `products.product_name_en` และ `products.product_code` จะไม่ถูกนำมาแสดงในบรรทัดรายละเอียด** (ใช้เป็นเพียงส่วนประกอบของ `item_name` เท่านั้น)
+- **SQL ที่ใช้ใน print.php/view.php:** `SELECT i.*, p.description AS product_description FROM quotation_items i LEFT JOIN products p ON i.product_id = p.product_id WHERE i.quotation_id = ? ORDER BY i.item_id`
+- **PHP ที่ใช้ใน print.php/view.php:** `$itemDesc = $item['description'] ?: ($item['product_description'] ?? '');` แล้วแสดงด้วย `nl2br(htmlspecialchars($itemDesc))` ต่อเมื่อ `$itemDesc !== ''`
 
 ### 9.6 ตารางที่ไม่ต้องกรอง
 - **ลูกค้า (customers)** - ฟอร์ม Quotation ทั้ง create และ edit มี `WHERE status = 'active'` อยู่แล้วตั้งแต่เริ่มต้น

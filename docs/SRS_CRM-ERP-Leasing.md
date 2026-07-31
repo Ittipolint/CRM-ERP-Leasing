@@ -146,7 +146,7 @@ QuotationItem (N) ──→ (1) Product
 - **QT-F13**: ยกเลิก Quotation (Cancel)
 - **QT-F14**: คัดลอก Quotation ฉบับเดิมเพื่อสร้างฉบับใหม่
 - **QT-F15**: เลือกสินค้าจาก Dropdown ที่หัวตาราง (Product Selector) พร้อมปุ่ม Add
-- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์บนใบ Quotation (Fallback ไปใช้ products.description ผ่าน product_id)
+- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์ใต้ชื่อรายการสินค้าบนใบ Quotation (Fallback ไปใช้ products.description ผ่าน product_id)
 - **QT-F17**: คลิกแถวสินค้าในหน้า View เพื่อไปยังหน้าแก้ไข Edit
 - **QT-F18**: ลบใบเสนอราคา (เฉพาะสถานะ Draft, แสดง error ถ้ามี FK constraint)
 
@@ -225,7 +225,7 @@ VAT = มูลค่าก่อน VAT × (vat_rate / 100)
 - **Product Selector Dropdown**: Dropdown สำหรับเลือกสินค้าอยู่ที่ด้านบนของตาราง (หัวตาราง) เมื่อเลือกสินค้าแล้วกดปุ่ม **Add** รายการสินค้าจะถูกเพิ่มเข้าไปในตาราง โดยชื่อสินค้า (item_name) ราคา และ product_id จะถูกเติมอัตโนมัติ และฟิลด์ชื่อสินค้าจะเป็น ReadOnly
 - **Quantity**: จำนวนเริ่มต้นเป็น 1 ผู้ใช้สามารถแก้ไขจำนวนในตารางได้
 - **Description**: ในแต่ละรายการมีฟิลด์ "รายละเอียด" สำหรับระบุข้อมูลเพิ่มเติม โดยเมื่อเลือกสินค้าจาก Product Selector ระบบจะ Auto-fill คำอธิบาย (Description) จากตาราง `products` มาให้อัตโนมัติ และผู้ใช้ยังสามารถแก้ไขได้ โดยระบบจะบันทึกทั้ง `product_id` และคำอธิบายที่เลือก/แก้ไขไว้ในตาราง `quotation_items`
-- **Print/View Fallback**: ในหน้า Print และ View ถ้ารายการสินค้ามี `product_id` ระบบจะ JOIN ตาราง `products` เพื่อแสดง `description` ล่าสุดของสินค้า (ใช้เป็นค่า Fallback เมื่อไม่มีการระบุคำอธิบายเฉพาะของรายการ)
+- **Print/View Fallback**: ในหน้า Print และ View รายละเอียดสินค้าจะแสดงเป็นบรรทัดเล็กใต้ชื่อรายการสินค้าแต่ละรายการ โดยใช้คำอธิบายจาก `quotation_items.description` ก่อน ถ้าเว้นว่าง ระบบจะ JOIN ตาราง `products` ด้วย `product_id` และแสดง `products.description` ล่าสุดเป็นค่า Fallback
 - **รายการที่ถูก Add**: ชื่อสินค้าและราคาถูก Lock (ReadOnly) แต่รายละเอียดและจำนวนสามารถแก้ไขได้
 - **Click to Edit**: ในหน้า View Quotation คลิกที่แถวรายการสินค้าเพื่อไปยังหน้าแก้ไข (Edit) ได้ทันที
 - **Novalidate**: ฟอร์มใช้ `novalidate` เพื่อป้องกัน Browser HTML5 Validation ที่อาจขัดขวางการส่งฟอร์มในกรณี ReadOnly + Required
@@ -947,10 +947,10 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 - **JS Logic:** ใช้ `data-code`, `data-name`, `data-price`, `data-desc` attributes ใน `<option>` เพื่อส่งข้อมูลไปยัง JavaScript และบันทึก `item_product_id[]` (product_id) พร้อมรายการ
 
 ### 9.4 การพิมพ์ใบเสนอราคา (Print Quotation)
-- **คอลัมน์รายละเอียด:** เพิ่มคอลัมน์ "รายละเอียด" ในตารางสินค้าของหน้าพิมพ์ (`modules/quotation/print.php`)
-- **โครงสร้างตารางพิมพ์:** `# | รายการ | รายละเอียด | จำนวน | ราคาต่อหน่วย | รวม`
+- **คอลัมน์รายละเอียด:** รายละเอียดสินค้าแสดงเป็นบรรทัดเล็ก (สีเทา) ใต้ชื่อรายการสินค้าแต่ละรายการในหน้าพิมพ์ (`modules/quotation/print.php`) และหน้า View
+- **โครงสร้างตารางพิมพ์:** `# | รายการ (+รายละเอียดใต้ชื่อ) | จำนวน | ราคาต่อหน่วย | รวม`
 - ข้อมูลแสดงจากฟิลด์ `item_name` ในตาราง `quotation_items`
-- **ที่มาของรายละเอียด:** คอลัมน์ "รายละเอียด" แสดงจากฟิลด์ `quotation_items.description` ก่อน (คำอธิบายที่บันทึกตอนสร้างใบเสนอราคา); ถ้าเว้นว่าง ระบบจะ JOIN ตาราง `products` ด้วย `quotation_items.product_id` และแสดง `products.description` ล่าสุดเป็นค่า Fallback
+- **ที่มาของรายละเอียด:** บรรทัดรายละเอียดใต้ชื่อรายการแสดงจากฟิลด์ `quotation_items.description` ก่อน (คำอธิบายที่บันทึกตอนสร้างใบเสนอราคา); ถ้าเว้นว่าง ระบบจะ JOIN ตาราง `products` ด้วย `quotation_items.product_id` และแสดง `products.description` ล่าสุดเป็นค่า Fallback
 
 ### 9.6 ตารางที่ไม่ต้องกรอง
 - **ลูกค้า (customers)** - ฟอร์ม Quotation ทั้ง create และ edit มี `WHERE status = 'active'` อยู่แล้วตั้งแต่เริ่มต้น

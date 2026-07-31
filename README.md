@@ -98,3 +98,4 @@
 | 2026-07-30 | **Feature:** เพิ่มฟังก์ชันลบ Quotation (delete.php) + ปุ่มลบใน index และ view |
 | 2026-07-31 | **Feature:** Auto-fill รายละเอียดสินค้า (description) จากตาราง products ใน quotation create/edit (data-desc) เพื่อแสดงใน print |
 | 2026-07-31 | **Fix:** บันทึก product_id ลง quotation_items (item_product_id) + Print/View JOIN products เพื่อ Fallback แสดง description ของสินค้าเสมอ |
+| 2026-07-31 | **Feature:** ย้ายแสดงรายละเอียดสินค้า (description) ไปพิมพ์เป็นบรรทัดเล็กใต้ชื่อรายการสินค้าแต่ละตัวบนใบ Quotation (Print/View) |

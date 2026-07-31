@@ -146,7 +146,7 @@ QuotationItem (N) ──→ (1) Product
 - **QT-F13**: ยกเลิก Quotation (Cancel)
 - **QT-F14**: คัดลอก Quotation ฉบับเดิมเพื่อสร้างฉบับใหม่
 - **QT-F15**: เลือกสินค้าจาก Dropdown ที่หัวตาราง (Product Selector) พร้อมปุ่ม Add
-- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์ใต้ชื่อรายการสินค้าบนใบ Quotation โดยใช้ **เฉพาะ field `products.description`** (ไม่ใช่ `product_name`/`product_name_en`) ผ่านตรรกะ: ใช้ `quotation_items.description` ก่อน แล้ว Fallback ไปใช้ `products.description` (JOIN ผ่าน `product_id`)
+- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector และพิมพ์ใต้ชื่อรายการสินค้าบนใบ Quotation โดยใช้ **เฉพาะ field `products.description`** (ไม่ใช่ `product_name`/`product_name_en`) โดยแสดงค่าปัจจุบันของ `products.description` เป็นหลัก (JOIN ผ่าน `product_id` หรือ `product_code` จาก `item_name` สำหรับใบเก่า)
 - **QT-F17**: คลิกแถวสินค้าในหน้า View เพื่อไปยังหน้าแก้ไข Edit
 - **QT-F18**: ลบใบเสนอราคา (เฉพาะสถานะ Draft, แสดง error ถ้ามี FK constraint)
 
@@ -225,7 +225,7 @@ VAT = มูลค่าก่อน VAT × (vat_rate / 100)
 - **Product Selector Dropdown**: Dropdown สำหรับเลือกสินค้าอยู่ที่ด้านบนของตาราง (หัวตาราง) เมื่อเลือกสินค้าแล้วกดปุ่ม **Add** รายการสินค้าจะถูกเพิ่มเข้าไปในตาราง โดยชื่อสินค้า (item_name) ราคา และ product_id จะถูกเติมอัตโนมัติ และฟิลด์ชื่อสินค้าจะเป็น ReadOnly
 - **Quantity**: จำนวนเริ่มต้นเป็น 1 ผู้ใช้สามารถแก้ไขจำนวนในตารางได้
 - **Description**: ในแต่ละรายการมีฟิลด์ "รายละเอียด" สำหรับระบุข้อมูลเพิ่มเติม โดยเมื่อเลือกสินค้าจาก Product Selector ระบบจะ Auto-fill คำอธิบาย (Description) จากตาราง `products` มาให้อัตโนมัติ และผู้ใช้ยังสามารถแก้ไขได้ โดยระบบจะบันทึกทั้ง `product_id` และคำอธิบายที่เลือก/แก้ไขไว้ในตาราง `quotation_items`
-- **Print/View Fallback**: ในหน้า Print และ View รายละเอียดสินค้าจะแสดงเป็นบรรทัดเล็กใต้ชื่อรายการสินค้าแต่ละรายการ โดยใช้คำอธิบายจาก `quotation_items.description` ก่อน ถ้าเว้นว่าง ระบบจะ JOIN ตาราง `products` ด้วย `product_id` และแสดง `products.description` ล่าสุดเป็นค่า Fallback
+- **Print/View Fallback**: ในหน้า Print และ View รายละเอียดสินค้าจะแสดงเป็นบรรทัดเล็กใต้ชื่อรายการสินค้าแต่ละรายการ โดยแสดง **`products.description` ปัจจุบัน** เป็นหลัก (JOIN ตาราง `products` ด้วย `product_id` หรือ `product_code` จาก `item_name` สำหรับใบเก่า) ถ้าจับคู่สินค้าไม่ได้จึงใช้ `quotation_items.description` ที่บันทึกไว้
 - **รายการที่ถูก Add**: ชื่อสินค้าและราคาถูก Lock (ReadOnly) แต่รายละเอียดและจำนวนสามารถแก้ไขได้
 - **Click to Edit**: ในหน้า View Quotation คลิกที่แถวรายการสินค้าเพื่อไปยังหน้าแก้ไข (Edit) ได้ทันที
 - **Novalidate**: ฟอร์มใช้ `novalidate` เพื่อป้องกัน Browser HTML5 Validation ที่อาจขัดขวางการส่งฟอร์มในกรณี ReadOnly + Required
@@ -950,12 +950,15 @@ $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 - **คอลัมน์รายละเอียด:** รายละเอียดสินค้าแสดงเป็นบรรทัดเล็ก (สีเทา) ใต้ชื่อรายการสินค้าแต่ละรายการในหน้าพิมพ์ (`modules/quotation/print.php`) และหน้า View
 - **โครงสร้างตารางพิมพ์:** `# | รายการ (+รายละเอียดใต้ชื่อ) | จำนวน | ราคาต่อหน่วย | รวม`
 - ข้อมูลบรรทัดหลัก (ชื่อรายการ) แสดงจากฟิลด์ `item_name` ในตาราง `quotation_items`
-- **ที่มาของบรรทัดรายละเอียด (สำคัญ):** บรรทัดเล็กใต้ชื่อรายการจะแสดง **`products.description` เท่านั้น** ผ่านตรรกะต่อไปนี้:
-  1. ใช้ `quotation_items.description` (คำอธิบายที่ Auto-fill/บันทึกตอนสร้างใบเสนอราคา) ก่อน
-  2. ถ้าเว้นว่าง ระบบจะ `LEFT JOIN products p ON p.product_id = quotation_items.product_id` และแสดง `p.description AS product_description` ล่าสุดเป็นค่า Fallback
-  3. **ฟิลด์ `products.product_name`, `products.product_name_en` และ `products.product_code` จะไม่ถูกนำมาแสดงในบรรทัดรายละเอียด** (ใช้เป็นเพียงส่วนประกอบของ `item_name` เท่านั้น)
-- **SQL ที่ใช้ใน print.php/view.php:** `SELECT i.*, p.description AS product_description FROM quotation_items i LEFT JOIN products p ON i.product_id = p.product_id WHERE i.quotation_id = ? ORDER BY i.item_id`
-- **PHP ที่ใช้ใน print.php/view.php:** `$itemDesc = $item['description'] ?: ($item['product_description'] ?? '');` แล้วแสดงด้วย `nl2br(htmlspecialchars($itemDesc))` ต่อเมื่อ `$itemDesc !== ''`
+- **ที่มาของบรรทัดรายละเอียด (สำคัญ):** บรรทัดเล็กใต้ชื่อรายการจะแสดง **`products.description`** (ค่าปัจจุบันจากตาราง `products`) เป็นหลัก ผ่านตรรกะต่อไปนี้:
+  1. `LEFT JOIN products` (2 เส้นทาง) แล้วใช้ `COALESCE` เพื่อดึง `products.description` ล่าสุด:
+     - เส้นทาง A: match ด้วย `quotation_items.product_id = products.product_id` (ใบที่สร้างใหม่)
+     - เส้นทาง B (Fallback สำหรับใบเก่าที่ `product_id` เป็น NULL): match ด้วย `product_code` ที่แยกมาจาก `item_name` (รูปแบบ `"รหัสสินค้า - ชื่อสินค้า"`) ผ่าน `TRIM(SUBSTRING_INDEX(item_name, ' - ', 1))`
+  2. ถ้าจับคู่สินค้าได้ จะแสดง **`products.description` ปัจจุบันเสมอ** (ค่าที่แก้ไขในตาราง products จะอัปเดตตามทันที)
+  3. ถ้าจับคู่สินค้าไม่ได้ (รายการที่ป้อนเอง) จะใช้ `quotation_items.description` ที่บันทึกไว้
+  4. **ฟิลด์ `products.product_name`, `products.product_name_en` และ `products.product_code` จะไม่ถูกนำมาแสดงในบรรทัดรายละเอียด** (ใช้เป็นเพียงส่วนประกอบของ `item_name` เท่านั้น)
+- **SQL ที่ใช้ใน print.php/view.php:** `SELECT i.*, COALESCE(p1.description, p2.description) AS product_description FROM quotation_items i LEFT JOIN products p1 ON p1.product_id = i.product_id LEFT JOIN products p2 ON i.product_id IS NULL AND p2.product_code = TRIM(SUBSTRING_INDEX(i.item_name, ' - ', 1)) WHERE i.quotation_id = ? ORDER BY i.item_id`
+- **PHP ที่ใช้ใน print.php/view.php:** `$itemDesc = $item['product_description'] ?? ($item['description'] ?? '');` แล้วแสดงด้วย `nl2br(htmlspecialchars($itemDesc))` ต่อเมื่อ `$itemDesc !== ''` (ขึ้นบรรทัดใหม่ด้วย `<br />`)
 
 ### 9.6 ตารางที่ไม่ต้องกรอง
 - **ลูกค้า (customers)** - ฟอร์ม Quotation ทั้ง create และ edit มี `WHERE status = 'active'` อยู่แล้วตั้งแต่เริ่มต้น

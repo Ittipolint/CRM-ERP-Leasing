@@ -96,3 +96,4 @@
 | 2026-07-30 | **Feature:** เพิ่มฟังก์ชันลบ Customer, Prospect + fix re-fetch หลัง save edit |
 | 2026-07-30 | **Feature:** เพิ่มฟังก์ชันลบสินค้า (delete.php) + ปุ่มลบใน index และ edit |
 | 2026-07-30 | **Feature:** เพิ่มฟังก์ชันลบ Quotation (delete.php) + ปุ่มลบใน index และ view |
+| 2026-07-31 | **Feature:** Auto-fill รายละเอียดสินค้า (description) จากตาราง products ใน quotation create/edit (data-desc) เพื่อแสดงใน print |

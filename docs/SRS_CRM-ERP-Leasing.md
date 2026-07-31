@@ -146,7 +146,7 @@ QuotationItem (N) ──→ (1) Product
 - **QT-F13**: ยกเลิก Quotation (Cancel)
 - **QT-F14**: คัดลอก Quotation ฉบับเดิมเพื่อสร้างฉบับใหม่
 - **QT-F15**: เลือกสินค้าจาก Dropdown ที่หัวตาราง (Product Selector) พร้อมปุ่ม Add
-- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ
+- **QT-F16**: ระบุรายละเอียดสินค้า (Description) เพิ่มเติมในแต่ละรายการ โดยอัตโนมัติ (Auto-fill) จากตาราง products เมื่อเลือกสินค้าจาก Product Selector
 - **QT-F17**: คลิกแถวสินค้าในหน้า View เพื่อไปยังหน้าแก้ไข Edit
 - **QT-F18**: ลบใบเสนอราคา (เฉพาะสถานะ Draft, แสดง error ถ้ามี FK constraint)
 
@@ -196,7 +196,7 @@ Draft → Cancelled
 | product_id | UUID FK | รหัสสินค้า |
 | product_name | VARCHAR(255) | ชื่อสินค้า (บันทึก ณ เวลาที่เสนอราคา) |
 | product_code | VARCHAR(50) | รหัสสินค้า |
-| description | TEXT | รายละเอียดเพิ่มเติม |
+| description | TEXT | รายละเอียดเพิ่มเติม (Auto-fill จาก products.description เมื่อเลือกสินค้า) |
 | quantity | INTEGER | จำนวน |
 | unit | VARCHAR(20) | หน่วย (เช่น ชุด, เครื่อง) |
 | unit_price | DECIMAL(12,2) | ราคาต่อหน่วย |
@@ -224,7 +224,7 @@ VAT = มูลค่าก่อน VAT × (vat_rate / 100)
 #### 3.2.9 UI การเลือกสินค้าและการระบุรายละเอียด
 - **Product Selector Dropdown**: Dropdown สำหรับเลือกสินค้าอยู่ที่ด้านบนของตาราง (หัวตาราง) เมื่อเลือกสินค้าแล้วกดปุ่ม **Add** รายการสินค้าจะถูกเพิ่มเข้าไปในตาราง โดยชื่อสินค้า (item_name) และราคาจะถูกเติมอัตโนมัติ และฟิลด์ชื่อสินค้าจะเป็น ReadOnly
 - **Quantity**: จำนวนเริ่มต้นเป็น 1 ผู้ใช้สามารถแก้ไขจำนวนในตารางได้
-- **Description**: ในแต่ละรายการมีฟิลด์ "รายละเอียด" สำหรับระบุข้อมูลเพิ่มเติม
+- **Description**: ในแต่ละรายการมีฟิลด์ "รายละเอียด" สำหรับระบุข้อมูลเพิ่มเติม โดยเมื่อเลือกสินค้าจาก Product Selector ระบบจะ Auto-fill คำอธิบาย (Description) จากตาราง `products` มาให้อัตโนมัติ และผู้ใช้ยังสามารถแก้ไขได้
 - **รายการที่ถูก Add**: ชื่อสินค้าและราคาถูก Lock (ReadOnly) แต่รายละเอียดและจำนวนสามารถแก้ไขได้
 - **Click to Edit**: ในหน้า View Quotation คลิกที่แถวรายการสินค้าเพื่อไปยังหน้าแก้ไข (Edit) ได้ทันที
 - **Novalidate**: ฟอร์มใช้ `novalidate` เพื่อป้องกัน Browser HTML5 Validation ที่อาจขัดขวางการส่งฟอร์มในกรณี ReadOnly + Required
